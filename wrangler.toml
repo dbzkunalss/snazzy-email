@@ -3,6 +3,11 @@ name = "snazzy-email"
 main = "src/index.js"
 compatibility_date = "2024-10-11"
 compatibility_flags = ["nodejs_compat"]
+send_email = [
+    {name = "email-service"},
+     {name = "email-service-dest", destination_address = "dbzkunalss@gmail.com"},
+     {name = "email-service-allow", allowed_destination_addresses = ["dbzkunalss@gmail.com", "kunalsharma.test@gmail.com"]},
+]
 
 # Workers Logs
 # Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
@@ -16,11 +21,7 @@ enabled = true
 # Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
 # [placement]
 # mode = "smart"
-send_email = [
-    {name = "<email-service>"},
-     {name = "<email-service-dest>", destination_address = "<dbzkunalss@gmail.com"},
-     {name = "<Nemail-service-allow>", allowed_destination_addresses = ["<"dbzkunalss@gmail.com"]},
-]
+
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Docs:
