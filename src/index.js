@@ -8,7 +8,6 @@ export default {
     console.log('HTML', email.html);
 
     // Generate a one-line summary using Workers AI with Llama 3.1
-    const ai = new env.AI();
     const summary = await ai.run('@cf/meta/llama-3-8b-instruct', {
       messages: [
         { role: 'system', content: 'You are a helpful assistant that summarizes emails in one line.' },
