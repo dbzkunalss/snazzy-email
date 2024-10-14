@@ -7,15 +7,15 @@ export default {
     console.log('Subject', email.subject);
 
     // Redact personal information using Workers AI
-    const redactedHtml = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', {
+    const redactedHtml = await env.AI.run('@cf/meta/llama-3.1-70b-instruct', {
       messages: [
-        { role: 'system', content: 'You are a helpful assistant that redacts personal information from text. Replace names, addresses, phone numbers, and other personal identifiers with [REDACTED].' },
+        { role: 'system', content: 'You are a helpful assistant that redacts personal information from text. Replace only names, addresses, phone numbers, and email addresses with [REDACTED]. Do not alter any other content.' },
         { role: 'user', content: `Redact personal information from this HTML:\n${email.html}` }
       ]
     });
 
     // Generate a one-line summary using Workers AI
-    const summary = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', {
+    const summary = await env.AI.run('@cf/meta/llama-3.1-70b-instruct', {
       messages: [
         { role: 'system', content: 'You are a helpful assistant that summarizes emails in one line.' },
         { role: 'user', content: `Summarize this email in one line:\nSubject: ${email.subject}\nBody: ${redactedHtml.response}` }
@@ -24,7 +24,7 @@ export default {
 
     console.log('Email Summary:', summary.response);
 
-    // Create an HTML page with the original and redacted email content side by side
+    // Create an HTML page with the redacted email content and summary
     const htmlContent = `
       <!DOCTYPE html>
       <html lang="en">
@@ -69,8 +69,12 @@ export default {
     const key = `email_${Date.now()}`;
     await env.EMAIL_CONTENT.put(key, htmlContent);
 
+    // Log the URL to be accessed
+    const url = `https://snazzy-new.offcord.workers.dev/email/${key}`;
+    console.log('Email stored. Access it at:', url);
+
     // Return a response with the URL to access the stored email
-    return new Response(`Email stored. Access it at: https://snazzy-newoffcord.workers.dev/email/${key}`, {
+    return new Response(`Email stored. Access it at: ${url}`, {
       headers: { 'Content-Type': 'text/plain' }
     });
   },
