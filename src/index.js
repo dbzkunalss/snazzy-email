@@ -9,16 +9,18 @@ export default {
     // Redact personal information using Workers AI
     const redactedHtml = await env.AI.run('@cf/meta/llama-3.1-70b-instruct', {
       messages: [
-        { role: 'system', content: 'You are a helpful assistant that redacts personal information from text. Replace only names, addresses, phone numbers, and email addresses with [REDACTED]. Do not alter any other content.' },
+        { role: 'system', content: 'You are a helpful assistant that redacts personal information from the HTML of an email. Replace only names, addresses, phone numbers, and email addresses with [REDACTED]. Do not alter any other content.' },
         { role: 'user', content: `Redact personal information from this HTML:\n${email.html}` }
-      ]
+      ],
+	  max_tokens: 2000
     });
 
     // Generate a one-line summary using Workers AI
     const summary = await env.AI.run('@cf/meta/llama-3.1-70b-instruct', {
       messages: [
         { role: 'system', content: 'You are a helpful assistant that summarizes emails in one line.' },
-        { role: 'user', content: `Summarize this email in one line:\nSubject: ${email.subject}\nBody: ${redactedHtml.response}` }
+        { role: 'user', content: `Summarize this email in one line:\nSubject: ${email.subject}\nBody: ${redactedHtml.response}` },
+		
       ]
     });
 
